@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manish Mallah</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tweakpane@3.0.5/dist/tweakpane.min.js"></script>
+    <style>
+        :root {
+            --neon-blue: #dadfdf;
+            --cyber-purple: #13fef6;
+            --matrix-green: #ff0aca;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            background: #000;
+            color: var(--neon-blue);
+        }
+
+        #container3D {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .resume-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cyber-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 0 30px var(--neon-blue);
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .cyber-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 50px var(--cyber-purple);
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                var(--neon-blue), 
+                var(--cyber-purple), 
+                var(--matrix-green));
+            z-index: -1;
+            border-radius: 15px;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .skill-card {
+            background: rgba(0, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        .skill-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .skill-card:hover::after {
+            left: 100%;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px var(--neon-blue);
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--matrix-green);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px var(--matrix-green);
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .cyber-lines {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0%,
+                transparent 2%,
+                rgba(0, 243, 255, 0.1) 3%,
+                transparent 5%
+            );
+            z-index: 1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-lines"></div>
+    <div id="container3D"></div>
+    
+    <div class="resume-content">
+        <div class="cyber-card">
+            <h1>Manish Mallah</h1>
+            <h2>Data analytics</h2>
+            <p>Decrypting data patterns in the digital matrix</p>
+        </div>
+
+        <div class="cyber-card">
+            <h2>Cyber Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card">Python</div>
+                <div class="skill-card">SQL</div>
+                <div class="skill-card">Machine Learning</div>
+                <div class="skill-card">Neural Networks</div>
+                <div class="skill-card">Big Data</div>
+                <div class="skill-card">Data Mining</div>
+                <div class="skill-card">Blockchain</div>
+                <div class="skill-card">AI Ethics</div>
+            </div>
+        </div>
+
+        <div class="cyber-card">
+            <h2>Experience Matrix</h2>
+            <div class="timeline">
+                <div class="timeline-event">
+                    <h3>Lead Data Decryptor @ CyberCorp</h3>
+                    <p>2022-Present | Neural network optimization</p>
+                </div>
+                <div class="timeline-event">
+                    <h3>AI Analyst @ FutureTech</h3>
+                    <p>2019-2022 | Predictive analytics</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Advanced Three.js Scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.getElementById('container3D').appendChild(renderer.domElement);
+
+        // Add floating geometric shapes
+        const geometry = new THREE.IcosahedronGeometry(0.5, 0);
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x00ff00,
+            emissive: 0x00ffff,
+            specular: 0xffffff,
+            shininess: 100,
+            wireframe: true
+        });
+
+        const shapes = [];
+        for(let i = 0; i < 20; i++) {
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(
+                (Math.random() - 0.5) * 10,
+                (Math.random() - 0.5) * 10,
+                (Math.random() - 0.5) * 10
+            );
+            shapes.push(mesh);
+            scene.add(mesh);
+        }
+
+        // Add particle network
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particleCount = 5000;
+        const posArray = new Float32Array(particleCount * 3);
+
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 10;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.005,
+            color: new THREE.Color(0x00ffff),
+            transparent: true,
+            opacity: 0.8
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        // Add directional lighting
+        const light = new THREE.DirectionalLight(0x00ffff, 1);
+        light.position.set(0, 5, 5);
+        scene.add(light);
+
+        camera.position.z = 5;
+
+        // GSAP Animations
+        gsap.to(camera.position, {
+            z: 3,
+            duration: 3,
+            ease: "power2.inOut",
+            repeat: -1,
+            yoyo: true
+        });
+
+        // Interactive Mouse Effects
+        const mouse = new THREE.Vector2();
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            shapes.forEach((shape, i) => {
+                shape.rotation.x += 0.01;
+                shape.rotation.y += 0.01;
+                shape.position.y += Math.sin(Date.now() * 0.001 + i) * 0.002;
+            });
+
+            particlesMesh.rotation.x += 0.001;
+            particlesMesh.rotation.y += 0.001;
+            
+            // Mouse interaction
+            camera.position.x += (mouse.x * 2 - camera.position.x) * 0.02;
+            camera.position.y += (-mouse.y * 2 - camera.position.y) * 0.02;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Hover Effects for Skills
+        document.querySelectorAll('.skill-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                gsap.to(card, {
+                    background: 'rgba(0, 255, 255, 0.2)',
+                    duration: 0.3
+                });
+                shapes.forEach(shape => {
+                    gsap.to(shape.position, {
+                        x: shape.position.x + (Math.random() - 0.5),
+                        y: shape.position.y + (Math.random() - 0.5),
+                        duration: 0.5
+                    });
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, {
+                    background: 'rgba(0, 255, 255, 0.05)',
+                    duration: 0.3
+                });
+            });
+        });
+
+        animate();
+    </script>
+</body>
+</html>
+
+
